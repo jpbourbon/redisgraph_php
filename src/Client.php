@@ -1,7 +1,7 @@
 <?php
 namespace RedisGraphPhp;
 
-use Predis\Client;
+use Predis\Client as PRedisClient;
 use RedisGraphPhp\Cypher;
 use RedisGraphPhp\Result;
 use Exception;
@@ -47,14 +47,14 @@ class RedisGraph
         $host =config("database.redis.default.host");
         $port = config("database.redis.default.port");
         
-        self::$client = new Client("redis://$host:$port");
+        self::$client = new PRedisClient("redis://$host:$port");
     }
     
     /**
      * Returns the instance
      * @return \App\Connectors\RedisGraph
      */
-    final private static function getInstance(): RedisGraph
+    final private static function getInstance(): Client
     {
         if (self::$instance == null)
         {
