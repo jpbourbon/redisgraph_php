@@ -6,30 +6,54 @@ use RedisGraphPhp\Cypher;
 use RedisGraphPhp\Result;
 use Exception;
 
-class RedisGraph
-{
+class Client
+{   
     /**
      *
-     * @var type Predis\Client
+     * @var type PRedisClient
      */
-    private static $client;
+    private $client;
+    
     /**
      *
-     * @var type RedisGraph
+     * @var type string
      */
-    private static $instance = null;
+    private $graph;
+    
+    /**
+     * 
+     * 
+     * @param array $options
+     */
+    public function __construct(array $options)
+    {
+        $this->connect($options);
+        if (array_key_exists("graph", $options)) {
+            $this->graph = $graph;
+        }
+    }
+    
+    /**
+     * 
+     * @param string $graph
+     * @return \RedisGraphPhp\Client
+     */
+    final public function setGraph(string $graph): Client
+    {
+        $this->graph = $graph;
+        
+        return $this;
+    }
     
     /**
      * Executes the query
      * @param string $query
      * @return array
      */
-    final public static function run(Cypher $cypher): Result
+    final public static function run(Cypher $cypher, $graph = ""): Result
     {
-        self::getInstance();
-        $redis = self::$client;
-        $graph = "test";
-        $result = $redis->executeRaw(["GRAPH.QUERY", $graph, $cypher->getQuery()]);
+        $graph = $graph === "" ? $this->graph : $graph;
+        $result = $this->client->executeRaw(["GRAPH.QUERY", $graph, $cypher->getQuery()]);
         
         if (!is_array($result)) {
             throw new Exception("Cypher error: $result");
@@ -42,26 +66,11 @@ class RedisGraph
      * Connects to the database
      * @return void
      */
-    final private static function connect(): void
+    final private static function connect(array $option): void
     {
-        $host =config("database.redis.default.host");
-        $port = config("database.redis.default.port");
+        $host = $options["host"];
+        $port = $options["port"];
         
-        self::$client = new PRedisClient("redis://$host:$port");
-    }
-    
-    /**
-     * Returns the instance
-     * @return \App\Connectors\RedisGraph
-     */
-    final private static function getInstance(): Client
-    {
-        if (self::$instance == null)
-        {
-            self::$instance = new RedisGraph();
-            self::connect();
-        }
- 
-        return self::$instance;
+        $this->client = new PRedisClient("redis://$host:$port");
     }
 }
