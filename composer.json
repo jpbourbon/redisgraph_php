@@ -14,12 +14,13 @@
         }
     ],
     "require": {
-        "predis/predis":         "1.1"
+        "php": "^7.2",
+        "predis/predis": "^1.1"
     },
     "minimum-stability": "dev",
     "autoload": {
-        "psr-0": {
-            "RedisGraphPhp":        "src/"
+        "psr-4": {
+            "RedisGraphPhp\\":        "src/"
         }
     }
 }
