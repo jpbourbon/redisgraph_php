@@ -1,5 +1,5 @@
 <?php
-namespace RedisGraphPhp;
+namespace RedisGraphPhp\Interfaces;
 
 interface IRecord
 {

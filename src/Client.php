@@ -29,7 +29,7 @@ class Client
     {
         $this->connect($options);
         if (array_key_exists("graph", $options)) {
-            $this->graph = $graph;
+            $this->graph = $options["graph"];
         }
     }
     
@@ -50,7 +50,7 @@ class Client
      * @param string $query
      * @return array
      */
-    final public static function run(Cypher $cypher, $graph = ""): Result
+    final public function run(Cypher $cypher, $graph = ""): Result
     {
         $graph = $graph === "" ? $this->graph : $graph;
         $result = $this->client->executeRaw(["GRAPH.QUERY", $graph, $cypher->getQuery()]);
@@ -66,7 +66,7 @@ class Client
      * Connects to the database
      * @return void
      */
-    final private static function connect(array $option): void
+    final private function connect(array $options): void
     {
         $host = $options["host"];
         $port = $options["port"];
