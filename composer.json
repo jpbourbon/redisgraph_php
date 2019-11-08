@@ -12,5 +12,15 @@
             "homepage": "https://github.com/jpbourbon",
             "role": "Developer"
         }
-    ]
+    ],
+    "require": {
+        "predis/predis":         "1.1"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "RedisGraphPhp":        "src/"
+        }
+    }
 }
+        
