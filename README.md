@@ -4,7 +4,7 @@ The goal of this library is providing a standard way of sending queries to the R
 
 ## Installation
 ```
-composer require jpbourbon/redisgraph_php:"0.5.4"
+composer require jpbourbon/redisgraph_php:"0.5.5"
 ```
 
 ## Usage
