@@ -40,9 +40,11 @@ class Client
      * @param string $graph
      * @return \RedisGraphPhp\Client
      */
-    final public function setGraph(string $graph): void
+    final public function setGraph(string $graph): Client
     {
         $this->otherGraph = $graph;
+        
+        return $this;
     }
     
     /**
@@ -55,6 +57,7 @@ class Client
     {
         
         $graph = $this->getGraph($cypher);
+        $cypher->setGraph($graph);
         $result = $this->client->executeRaw(["GRAPH.QUERY", $graph, $cypher->getQuery()]);
         
         if (!is_array($result)) {

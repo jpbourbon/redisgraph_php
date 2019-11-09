@@ -74,6 +74,16 @@ class Cypher
     
     /**
      * 
+     * @param string $graph
+     * @return void
+     */
+    final public function setGraph(string $graph): void
+    {
+        $this->graph = $graph;
+    }
+    
+    /**
+     * 
      * @return void
      * @throws Exception
      */
