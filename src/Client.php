@@ -20,6 +20,8 @@ class Client
      */
     private $graph;
     
+    private $otherGraph;
+    
     /**
      * 
      * 
@@ -38,21 +40,21 @@ class Client
      * @param string $graph
      * @return \RedisGraphPhp\Client
      */
-    final public function setGraph(string $graph): Client
+    final public function setGraph(string $graph): void
     {
-        $this->graph = $graph;
-        
-        return $this;
+        $this->otherGraph = $graph;
     }
     
     /**
-     * Executes the query
-     * @param string $query
-     * @return array
+     * 
+     * @param Cypher $cypher
+     * @return Result
+     * @throws Exception
      */
-    final public function run(Cypher $cypher, $graph = ""): Result
+    final public function run(Cypher $cypher): Result
     {
-        $graph = $graph === "" ? $this->graph : $graph;
+        
+        $graph = $this->getGraph($cypher);
         $result = $this->client->executeRaw(["GRAPH.QUERY", $graph, $cypher->getQuery()]);
         
         if (!is_array($result)) {
@@ -60,6 +62,27 @@ class Client
         }
         
         return new Result($result, $cypher);
+    }
+    
+    /**
+     * 
+     * @return string
+     * @throws Exception
+     */
+    final private function getGraph(Cypher $cypher): string
+    {
+        $return = null;
+        if (!is_null($cypher->getGraph())) {
+            $return = $cypher->getGraph();
+        } elseif (!is_null($this->otherGraph)) {
+            $reutn = $this->otherGraph;
+        } elseif (!is_null($this->graph)) {
+            $return = $this->graph;
+        } else {
+            throw new Exception("Please define a graph");
+        }
+        
+        return $return;
     }
     
     /**

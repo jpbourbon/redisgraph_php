@@ -1,32 +1,86 @@
 <?php
 namespace RedisGraphPhp;
 
+use Exception;
+
 class Cypher
 {
+    /**
+     *
+     * @var type string
+     */
     private $query;
+    
+    /**
+     *
+     * @var type string
+     */
     private $tag;
     
-    public function __construct(string $query, $tag = [])
+    /**
+     *
+     * @var type string
+     */
+    private $graph;
+    
+    /**
+     * 
+     * @param string $query
+     * @param type $tag
+     * @param type $graph
+     * @return void
+     */
+    public function __construct(string $query, $tag = "", $graph = "")
     {
-        $this->query = $query;
-        $this->tag = $tag;
+        if ($query !== "") {
+            $this->query = $query;
+        }
+        if ($tag !== "") {
+            $this->tag = $tag;
+        }
+        if ($graph !== "") {
+            $this->graph = $graph;
+        }
+        
+        $this->validate();
     }
     
     /**
      * Returns query
      * @return string
      */
-    final public function getQuery(): string
+    final public function getQuery(): ?string
     {
-        return $this->query;
+        return $this->query === "" ? null : $this->query;
     }
     
      /**
-     * Returns tag
-     * @return string
-     */
-    final public function getTag(): string
+      * 
+      * @return string|null
+      */
+    final public function getTag(): ?string
     {
-        return $this->tag;
+        return $this->tag === "" ? null : $this->tag;
+    }
+    
+    /**
+     * 
+     * @return string|null
+     */
+    final public function getGraph(): ?string
+    {
+        return $this->graph === "" ? null : $this->graph;
+    }
+    
+    /**
+     * 
+     * @return void
+     * @throws Exception
+     */
+    final public function validate(): void
+    {
+        if (is_null($this->getQuery())) {
+            throw new Exception("No query defined.");
+        }
     }
 }
