@@ -5,19 +5,20 @@
     "keywords": ["redisgraph","tphp","cypher","graph"],
     "homepage": "https://github.com/jpbourbon/redisgraph_php",
     "license": "MIT",
+    "support": {
+        "issues": "https://github.com/jpbourbon/redisgraph_php/issues"
+    },
     "authors": [
         {
             "name": "Joao Pedro Bourbon",
             "email": "jpbourbon@gmail.com",
-            "homepage": "https://github.com/jpbourbon",
-            "role": "Developer"
+            "homepage": "https://www.linkedin.com/in/jpbourbon/"
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": ">=7.0",
         "predis/predis": "^1.1"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "RedisGraphPhp\\":        "src/"
