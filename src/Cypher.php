@@ -1,7 +1,7 @@
 <?php
 namespace RedisGraphPhp;
 
-use Exception;
+use RedisGraphPhp\Exceptions\CypherException;
 
 class Cypher
 {
@@ -85,12 +85,12 @@ class Cypher
     /**
      * 
      * @return void
-     * @throws Exception
+     * @throws CypherException
      */
     final public function validate(): void
     {
         if (is_null($this->getQuery())) {
-            throw new Exception("No query defined.");
+            throw new CypherException();
         }
     }
 }

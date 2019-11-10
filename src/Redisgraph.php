@@ -1,10 +1,7 @@
 <?php
 namespace RedisGraphPhp;
 
-use RedisGraphPhp\Client;
-use RedisGraphPhp\Cypher;
-use RedisGraphPhp\Result;
-use Exception;
+use RedisGraphPhp\{Client, Cypher, Result};
 
 class RedisGraph
 {

@@ -2,9 +2,7 @@
 namespace RedisGraphPhp\Records;
 
 use RedisGraphPhp\Interfaces\iRecord;
-use RedisGraphPhp\Records\Node;
-use RedisGraphPhp\Records\Relationship;
-use RedisGraphPhp\Records\Scalar;
+use RedisGraphPhp\Records\{Node, Relationshiph, Scalar};
 
 class RecordFactory
 {

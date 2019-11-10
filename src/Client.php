@@ -2,9 +2,10 @@
 namespace RedisGraphPhp;
 
 use Predis\Client as PRedisClient;
-use RedisGraphPhp\Cypher;
-use RedisGraphPhp\Result;
-use Exception;
+use RedisGraphPhp\{Cypher, Result};
+use RedisGraphPhp\Exceptions\{CypherException,
+    InvalidOptionsException,
+    NoGraphDefinedException};
 
 class Client
 {   
@@ -51,7 +52,7 @@ class Client
      * 
      * @param Cypher $cypher
      * @return Result
-     * @throws Exception
+     * @throws CypherException
      */
     final public function run(Cypher $cypher): Result
     {
@@ -61,7 +62,7 @@ class Client
         $result = $this->client->executeRaw(["GRAPH.QUERY", $graph, $cypher->getQuery()]);
         
         if (!is_array($result)) {
-            throw new Exception("Cypher error: $result");
+            throw new CypherException($result);
         }
         
         return new Result($result, $cypher);
@@ -69,8 +70,9 @@ class Client
     
     /**
      * 
+     * @param Cypher $cypher
      * @return string
-     * @throws Exception
+     * @throws NoGraphDefinedException
      */
     final private function getGraph(Cypher $cypher): string
     {
@@ -78,11 +80,11 @@ class Client
         if (!is_null($cypher->getGraph())) {
             $return = $cypher->getGraph();
         } elseif (!is_null($this->otherGraph)) {
-            $reutn = $this->otherGraph;
+            $return = $this->otherGraph;
         } elseif (!is_null($this->graph)) {
             $return = $this->graph;
         } else {
-            throw new Exception("Please define a graph");
+            throw new NoGraphDefinedException();
         }
         
         return $return;
@@ -94,9 +96,37 @@ class Client
      */
     final private function connect(array $options): void
     {
+        $this->validateOptions($options);
         $host = $options["host"];
         $port = $options["port"];
         
         $this->client = new PRedisClient("redis://$host:$port");
+    }
+    
+    /**
+     * 
+     * @param array $options
+     * @return void
+     * @throws InvalidOptionsException
+     */
+    final private function validateOptions(array $options): void
+    {
+        $expected = [
+            "host",
+            "port"
+        ];
+        foreach ($expected as $expectItem) {
+            if (!in_array($expectItem, array_keys($options))) {
+                throw new InvalidOptionsException();
+            } elseif ($options[$expectItem] == "") {
+                throw new InvalidOptionsException();
+            }
+            if ($expectItem == "port" && !is_int($options[$expectItem])) {
+                throw new InvalidOptionsException();
+            }
+            if ($expectItem == "host" && !is_string($options[$expectItem])) {
+                throw new InvalidOptionsException();
+            }
+        }
     }
 }
