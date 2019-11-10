@@ -2,15 +2,15 @@
 namespace RedisGraphPhp\Records;
 
 use RedisGraphPhp\Interfaces\iRecord;
-use RedisGraphPhp\Records\Single;
 use RedisGraphPhp\Records\Node;
 use RedisGraphPhp\Records\Relationship;
+use RedisGraphPhp\Records\Scalar;
 
 class RecordFactory
 {
-    const SINGLE  = "value";
     const NODE          = "node";
     const RELATIONSHIP  = "relationship";
+    const SCALAR        = "scalar";
     
     /**
      * This is the factory for the specific kinds of Records
@@ -22,8 +22,8 @@ class RecordFactory
     {
         $return = null;
         switch ($recordType) {
-            case self::SINGLE:
-                $return = new Single($item, $recordType);
+            case self::SCALAR:
+                $return = new Scalar($item, $recordType);
                 break;
             case self::NODE;
                 $return = new Node($item, $recordType);

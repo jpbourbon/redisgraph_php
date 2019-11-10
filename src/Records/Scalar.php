@@ -3,9 +3,19 @@ namespace RedisGraphPhp\Records;
 
 use RedisGraphPhp\Interfaces\IRecord;
 
-class Single implements IRecord
+class Scalar implements IRecord
 {
+    /**
+     *
+     * @var type 
+     */
     private $recordType;
+    
+    /**
+     *
+     * @var type 
+     */
+    private $value;
     
     /**
      * 
@@ -40,18 +50,10 @@ class Single implements IRecord
     
     /**
      * 
-     * @param string $string
      * @return type
      */
-    final public function get(string $string)
+    final public function getValue($string = "")
     {
-        $return = NULL;
-        $key = array_search($string, $this->properties);
-        
-        if ($key !== false && array_key_exists($key, $this->values)) {
-            $return = $this->values[$key];
-        }
-        
-        return $return;
+        return $this->value;
     }
 }

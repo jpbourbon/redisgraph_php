@@ -4,7 +4,7 @@ The goal of this library is providing a standard way of sending queries to the R
 
 ## Installation
 ```
-composer require jpbourbon/redisgraph_php:"0.5.4"
+composer require jpbourbon/redisgraph_php:"0.5.6"
 ```
 
 ## Usage
@@ -89,12 +89,12 @@ Consider the following Cypher query:
 MATCH (f:Foo) RETURN f
 ```
 This returns the key ***f***.
-To obtain an array witht the returned keys, use the ***getKeys*** method:
+To obtain an array with the returned keys, use the ***getKeys*** method:
 ```
 $result->getKeys();
 ```
 
-#### Getting the RecorSet and Records
+#### Getting the RecordSet and Records
 
 The ***Result** and ***RecordSet*** objects provide methods to lookup their child classes.
 ```
@@ -106,11 +106,45 @@ $result->size(); // Returns the size of the recordSets array
 $result->firstRecordSet()->getRecords(); // Returns all Records from the first RecordSet
 $result->firstRecordSet()->getRecord(N); // Returns the Record at position N or null
 $result->firstRecordSet()->firstRecord(); // Returns the first Records from the RecordSet
-$result->firstRecordSet()->size(); // Returns the size of a records array
 ```
 
 #### Types of Records
 
-The ***Records*** can be either ***Nodes***, ***Relationships*** or ***Sinlge*** (scalar) values. Each of them has its own characteristics, reflected in the returned object.
+The ***Records*** can be either ***Nodes***, ***Relationships*** or ***Scalar values***. Each of them has its own characteristics, reflected in the returned object.
+
+#### Scalar
+
+Scalar values are single values. Those can be either the result of an internal cypher function (such as ***SUM(), COUNT()*** etc) or the value from a node or relationship property.
+```
+MATCH (n) RETURN COUNT(n) AS total // "total" is a scalar value
+MATCH (n) RETURN n.key // "n.key" is a scalar value
+```
+To access the value you would first need to know the key, and use the ***getValue()*** method on the record:
+```
+$result->firstRecordSet()->getRecord("total")->getValue(); // Returns the single value
+```
+However, as we often need to get a list of scalar values, there is a special method for that:
+```
+$result->getAllScalar("n.key"); // Returns an array of all values from all recordsets
+```
+
+#### Nodes and Relationships
+
+***Nodes*** and ***Relationships*** share some common methods, since they can both hold properties, but have their specific ones.
+Common
+```
+$result->firstRecordSet()->firstRecord()->getId(); // returns the internal id of the record
+$result->firstRecordSet()->firstRecord()-getProperties(); // Gets an array with existing properties;
+$result->firstRecordSet()->firstRecord()->getValue($property); // Gets the value for the given property name
+```
+Nodes
+```
+$result->firstRecordSet()->firstRecord()->getLabels(); // Gets the array of labels
+```
+Relationship
+```
+$result->firstRecordSet()->firstRecord()->getType(); // Returns the type as a string
+$result->firstRecordSet()->firstRecord()->getLinkedNodes(); // Gets an array with the source and target node ids
+```
 
 ## TBC...

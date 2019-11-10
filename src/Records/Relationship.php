@@ -5,13 +5,46 @@ use RedisGraphPhp\Interfaces\IRecord;
 
 class Relationship implements IRecord
 {
+    /**
+     *
+     * @var type string
+     */
     private $recordType;
     
+    /**
+     *
+     * @var type int
+     */
     private $id;
+    
+    /**
+     *
+     * @var type string
+     */
     private $type;
+    
+    /**
+     *
+     * @var type int
+     */
     private $sourceNode;
+    
+    /**
+     *
+     * @var type int
+     */
     private $targetNode;
+    
+    /**
+     *
+     * @var type 
+     */
     private $properties = [];
+    
+    /**
+     *
+     * @var type 
+     */
     private $values = [];
     
     /**
@@ -55,9 +88,9 @@ class Relationship implements IRecord
     
     /**
      * 
-     * @return string
+     * @return int
      */
-    final public function getId(): string
+    final public function getId(): int
     {
         return $this->id;
     }
@@ -71,7 +104,11 @@ class Relationship implements IRecord
         return $this->type;
     }
     
-    final public function getLinkedNodes(): string
+    /**
+     * 
+     * @return array
+     */
+    final public function getLinkedNodes(): array
     {
         return [
             "source" => $this->sourceNode,
@@ -82,9 +119,9 @@ class Relationship implements IRecord
     
     /**
      * 
-     * @return string
+     * @return array
      */
-    final public function getProperties(): string
+    final public function getProperties(): array
     {
         return $this->properties;
     }
@@ -94,7 +131,7 @@ class Relationship implements IRecord
      * @param string $string
      * @return type
      */
-    final public function get(string $string)
+    final public function getValue(string $string)
     {
         $return = NULL;
         $key = array_search($string, $this->properties);

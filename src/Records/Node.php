@@ -5,11 +5,33 @@ use RedisGraphPhp\Interfaces\IRecord;
 
 class Node implements IRecord
 {
+    /**
+     *
+     * @var type string
+     */
     private $recordType;
     
+    /**
+     *
+     * @var type int
+     */
     private $id;
-    private $labels;
+    /**
+     *
+     * @var type 
+     */
+    private $labels = [];
+    
+    /**
+     *
+     * @var type 
+     */
     private $properties = [];
+    
+    /**
+     *
+     * @var type 
+     */
     private $values = [];
     
     /**
@@ -51,27 +73,27 @@ class Node implements IRecord
     
     /**
      * 
-     * @return string
+     * @return int
      */
-    final public function getId(): string
+    final public function getId(): int
     {
         return $this->id;
     }
     
     /**
      * 
-     * @return string
+     * @return array
      */
-    final public function getLabels(): string
+    final public function getLabels(): array
     {
         return $this->labels;
     }
     
     /**
      * 
-     * @return string
+     * @return array
      */
-    final public function getProperties(): string
+    final public function getProperties(): array
     {
         return $this->properties;
     }
@@ -81,7 +103,7 @@ class Node implements IRecord
      * @param string $string
      * @return type
      */
-    final public function get(string $string)
+    final public function getValue(string $string)
     {
         $return = NULL;
         $key = array_search($string, $this->properties);

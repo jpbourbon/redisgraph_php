@@ -7,5 +7,5 @@ interface IRecord
     
     function getRecordType();
     
-    function get(string $string);
+    function getValue(string $string);
 }

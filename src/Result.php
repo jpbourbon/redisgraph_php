@@ -5,6 +5,7 @@ use RedisGraphPhp\Statistics;
 use RedisGraphPhp\Cypher;
 use RedisGraphPhp\Helper;
 use RedisGraphPhp\RecordSet;
+use RedisGraphPhp\Records\RecordFactory;
 
 class Result
 {
@@ -118,7 +119,7 @@ class Result
      * @param string $string
      * @return type mixed
      */
-    final public function getAllSingleValues(string $string)
+    final public function getAllScalar(string $string)
     {
         $return = null;
         $key = array_search($string, $this->keys);
@@ -126,8 +127,8 @@ class Result
         if ($key !== false) {
             $holder = [];
             foreach ($this->recordSets as $recordSet) {
-                if (array_key_exists($key, $recordSet->records) && $recordSet->records[$key]->getRecordType() === RecordFactory::SINGLE) {
-                    $holder []= ($recordSet->records[$key])->value;
+                if (array_key_exists($key, $recordSet->getRecords()) && $recordSet->getRecord($key)->getRecordType() === RecordFactory::SCALAR) {
+                    $holder []= ($recordSet->getRecord($key)->getValue());
                 }
             }
             if (!empty($holder)) {
@@ -138,4 +139,3 @@ class Result
         return $return;
     }
 }
-

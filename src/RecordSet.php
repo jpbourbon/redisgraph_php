@@ -7,8 +7,17 @@ use RedisGraphPhp\Records\RecordFactory;
 
 class RecordSet
 {
-    public $records = [];
-    private $keys;
+    /**
+     *
+     * @var type 
+     */
+    private $records = [];
+    
+    /**
+     *
+     * @var type 
+     */
+    private $keys = [];
     
     public function __construct(array $keys, array $array)
     {
@@ -20,21 +29,15 @@ class RecordSet
     final public function parse(array $result): void
     {
         $depth = Helpers::array_depth($result);
-        //var_export($depth);exit;
-        
-       
-        //var_export($result);
-        //var_export($depth);
-        //exit;
         
         foreach ($result as $item) {
             // Single values
             if ($depth == 1) {
-                $recordType = RecordFactory::SINGLE;
+                $recordType = RecordFactory::SCALAR;
             }
             if ($depth == 4 || $depth == 5) {
                 if (!is_array($item[0])) {
-                    $recordType = RecordFactory::SINGLE;
+                    $recordType = RecordFactory::SCALAR;
                 }
                 if ($item[1][0] == "type") {
                     $recordType = RecordFactory::RELATIONSHIP;
@@ -83,22 +86,5 @@ class RecordSet
         }
         
         return $return;      
-    }
-    
-    /**
-     * 
-     * @param string $string
-     * @return type
-     */
-    final public function getValue(string $string)
-    {
-        $return = null;
-        $key = array_search($string, $this->keys);
-        
-        if ($key !== false && array_key_exists($key, $this->records) && $this->records[$key]->getType() === Record::SINGLE_VALUE) {
-            $return = ($this->records[$key])->value;
-        }
-        
-        return $return;
     }
 }
