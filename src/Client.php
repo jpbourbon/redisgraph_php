@@ -21,6 +21,10 @@ class Client
      */
     private $graph;
     
+    /**
+     *
+     * @var type string
+     */
     private $otherGraph;
     
     /**
@@ -56,9 +60,9 @@ class Client
      */
     final public function run(Cypher $cypher): Result
     {
-        
         $graph = $this->getGraph($cypher);
         $cypher->setGraph($graph);
+        
         $result = $this->client->executeRaw(["GRAPH.QUERY", $graph, $cypher->getQuery()]);
         
         if (!is_array($result)) {
@@ -66,6 +70,33 @@ class Client
         }
         
         return new Result($result, $cypher);
+    }
+    
+    /**
+     * 
+     * @param Cypher $cypher
+     * @return array
+     */
+    final public function explain(Cypher $cypher): array
+    {
+        $graph = $this->getGraph($cypher);
+        $cypher->setGraph($graph);
+        
+        $result = $this->client->executeRaw(["GRAPH.EXPLAIN", $graph, $cypher->getQuery()]);
+        
+        return $result;
+    }
+    
+    /**
+     * 
+     * @param string $graph
+     * @return array
+     */
+    final public function delete(string $graph): array
+    {
+        $result = $this->client->executeRaw(["GRAPH.DELETE", $graph]);
+        
+        return [$result];
     }
     
     /**

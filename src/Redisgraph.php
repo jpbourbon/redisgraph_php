@@ -36,6 +36,30 @@ class RedisGraph
     
     /**
      * 
+     * @param Cypher $cypher
+     * @return array
+     */
+    final public static function explain(Cypher $cypher): array
+    {
+        self::getInstance();
+        
+        return self::$client->explain($cypher);
+    }
+    
+    /**
+     * 
+     * @param string $graph
+     * @return array
+     */
+    final public static function delete(string $graph): array
+    {
+        self::getInstance();
+        
+        return self::$client->delete($string);
+    }
+    
+    /**
+     * 
      * @param array $options
      * @return void
      */

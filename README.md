@@ -4,7 +4,7 @@ The goal of this library is providing a standard way of sending queries to the R
 
 ## Installation
 ```
-composer require jpbourbon/redisgraph_php:"0.5.7"
+composer require jpbourbon/redisgraph_php:"0.5.8"
 ```
 
 ## Usage
@@ -19,10 +19,10 @@ There are 2 ways of using this library.
 use RedisGraphPhp\Client;
 ...
 $options = [
-        "host"  => "127.0.0.1",
-        "port"  => "6379",
-        "graph" => "test"
-    ];
+    "host"  => "127.0.0.1",
+    "port"  => "6379",
+    "graph" => "test"
+];
 $client = new Client($options);
 ```
 #### RedisGraph
@@ -31,10 +31,10 @@ $client = new Client($options);
 use RedisGraphPhp\RedisGraph;
 ...
 $options = [
-        "host"  => "127.0.0.1",
-        "port"  => "6379",
-        "graph" => "test"
-    ];
+    "host"  => "127.0.0.1",
+    "port"  => "6379",
+    "graph" => "test"
+];
 RedisGraph::setOptions($options);
 ```
 
@@ -55,10 +55,10 @@ use RedisGraphPhp\Client;
 use RedisGraphPha\Cypher;
 ...
 $options = [
-        "host"  => "127.0.0.1",
-        "port"  => "6379",
-        "graph" => "test"
-    ];
+    "host"  => "127.0.0.1",
+    "port"  => "6379",
+    "graph" => "test"
+];
 $client = new Client($options);
 $cypher = new Cypher("MATCH (f:Foo) RETURN f", "MyTast");
 $result = $client->run($cypher);
@@ -70,10 +70,10 @@ use RedisGraphPhp\RedisGraph;
 use RedisGraphPha\Cypher;
 ...
 $options = [
-        "host"  => "127.0.0.1",
-        "port"  => "6379",
-        "graph" => "test"
-    ];
+    "host"  => "127.0.0.1",
+    "port"  => "6379",
+    "graph" => "test"
+];
 RedisGraph::setOptions($options);
 $cypher = new Cypher("MATCH (f:Foo) RETURN f", "MyTast");
 $result = RedisGraph::run($cypher);
@@ -111,6 +111,10 @@ $result->firstRecordSet()->firstRecord(); // Returns the first Records from the 
 #### Types of Records
 
 The ***Records*** can be either ***Nodes***, ***Relationships*** or ***Scalar values***. Each of them has its own characteristics, reflected in the returned object.
+The distinct types of record can be easily identified using the ***getRecordType*** method:
+```
+$result->firstRecordSet()->firstRecord()->getRecordType(); // Returns the record type as a string
+```
 
 #### Scalar
 
@@ -147,4 +151,92 @@ $result->firstRecordSet()->firstRecord()->getType(); // Returns the type as a st
 $result->firstRecordSet()->firstRecord()->getLinkedNodes(); // Gets an array with the source and target node ids
 ```
 
+### Graphs
+
+RedisGraph supports multiple graphs running alongside. This means the client must be flexible and support the different graphs.
+This client allows the definition of the graph in 3 different places:
+1 - connection options;
+2 - cypher object;
+3 - chained method before running the query;
+The graph defined in the connection options is the default graph, and acts as a fallback in case no graph is defined anywhere else.
+The graph defined on the cypher query or the chained method is always considered secondary, and must be explicitely set to be used.
+
+#### 1 - Connection options
+
+simply define the graph in the array:
+```
+ $options = [
+    "host"  => "127.0.0.1",
+    "port"  => "6379",
+    "graph" => "test"
+];
+```
+#### 2 - Cypher query
+
+The graph is an optional argument when creating the Cypher object. If defined, overrides the default graph for the query execution.
+```
+$cypher = new Cypher("MATCH (f:Foo) RETURN f", "MyTast", "myOtherGraph);
+```
+#### 3 - Chained method
+
+This option is useful if the user intends to use the same Cypher object for different graphs, as it overrides both the default graph and the Cypher object graph:
+
+##### Client
+```
+...
+$cypher = new Cypher("MATCH (f:Foo) RETURN f", "MyTast", "myOtherGraph");
+$result = $client->setGraph("myAlternativeGraph")->run($cypher);
+```
+##### RedisGraph
+```
+...
+$cypher = new Cypher("MATCH (f:Foo) RETURN f", "MyTast", "myOtherGraph");
+$result = RedisGraph::setGraph("myAlternativeGraph")::run($cypher);
+```
+### Delete graphs
+Graphs can be deleted with a simple ***delete*** method:
+##### Client
+```
+...
+$result = $client)->delete("myGraph");
+```
+##### RedisGraph
+```
+...
+$result = RedisGraph::delete("myGraph");
+```
+### Explain queries
+
+Both the ***RedisGraph*** and the ***Client*** classes feature an ***explain*** method that returns the query analysis:
+
+#### Client
+```
+...
+use RedisGraphPhp\Client;
+use RedisGraphPha\Cypher;
+...
+$options = [
+    "host"  => "127.0.0.1",
+    "port"  => "6379",
+    "graph" => "test"
+];
+$client = new Client($options);
+$cypher = new Cypher("MATCH (f:Foo) RETURN f", "MyTast");
+$result = $client->explain($cypher);
+```
+#### RedisGraph
+```
+...
+use RedisGraphPhp\RedisGraph;
+use RedisGraphPha\Cypher;
+...
+$options = [
+    "host"  => "127.0.0.1",
+    "port"  => "6379",
+    "graph" => "test"
+];
+RedisGraph::setOptions($options);
+$cypher = new Cypher("MATCH (f:Foo) RETURN f", "MyTast");
+$result = RedisGraph::explain($cypher);
+```
 ## TBC...
