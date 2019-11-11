@@ -45,7 +45,7 @@ class Client
      * @param string $graph
      * @return \RedisGraphPhp\Client
      */
-    final public function setGraph(string $graph): Client
+    final public function graph(string $graph): Client
     {
         $this->otherGraph = $graph;
         

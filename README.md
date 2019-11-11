@@ -185,13 +185,13 @@ This option is useful if the user intends to use the same Cypher object for diff
 ```
 ...
 $cypher = new Cypher("MATCH (f:Foo) RETURN f", "MyTast", "myOtherGraph");
-$result = $client->setGraph("myAlternativeGraph")->run($cypher);
+$result = $client->graph("myAlternativeGraph")->run($cypher);
 ```
 ##### RedisGraph
 ```
 ...
 $cypher = new Cypher("MATCH (f:Foo) RETURN f", "MyTast", "myOtherGraph");
-$result = RedisGraph::setGraph("myAlternativeGraph")::run($cypher);
+$result = RedisGraph::graph("myAlternativeGraph")::run($cypher);
 ```
 ### Delete graphs
 Graphs can be deleted with a simple ***delete*** method:
